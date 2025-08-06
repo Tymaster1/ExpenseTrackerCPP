@@ -82,6 +82,89 @@ double getValidAmount() {
 	return amount;
 }
 
+
+
+void displayExpensesWithIndex(const std::vector<Expense>& list) {
+	for (size_t i = 0; i < list.size(); ++i) {
+		std::cout << i + 1 << ". Description: " << list[i].description << "\n"
+			<< "   Amount: " << list[i].amount << "\n"
+			<< "   Date: " << list[i].date << "\n"
+			<< "-----------------------------\n";
+	}
+}
+
+void editExpense(std::vector<Expense>& list) {
+	if (list.empty()) {
+		std::cout << "No expenses to edit.\n";
+		return;
+	}
+
+	displayExpensesWithIndex(list);
+
+	int choice;
+	std::cout << "Enter the number of the expense to edit: ";
+	std::cin >> choice;
+
+	if (choice < 1 || choice > list.size()) {
+		std::cout << "Invalid selection.\n";
+		return;
+	}
+
+	Expense& exp = list[choice - 1];
+	std::cout << "Editing expense: " << exp.description << "\n";
+
+	std::cout << "Enter new description (or press enter to keep \"" << exp.description << "\"): ";
+	std::cin.ignore();
+	std::string newDesc;
+	getline(std::cin, newDesc);
+	if (!newDesc.empty()) exp.description = newDesc;
+
+	std::cout << "Enter new amount (or -1 to keep " << exp.amount << "): ";
+	double newAmt;
+	std::cin >> newAmt;
+	if (newAmt >= 0) exp.amount = newAmt;
+
+	std::cout << "Enter new date (or press enter to keep \"" << exp.date << "\"): ";
+	std::cin.ignore();
+	std::string newDate;
+	getline(std::cin, newDate);
+	if (!newDate.empty()) exp.date = newDate;
+
+	std::cout << "Expense updated successfully!\n";
+}
+
+void deleteExpense(std::vector<Expense>& list) {
+	if (list.empty()) {
+		std::cout << "No expenses to delete.\n";
+		return;
+	}
+
+	displayExpensesWithIndex(list);
+
+	int choice;
+	std::cout << "Enter the number of the expense to delete: ";
+	std::cin >> choice;
+
+	if (choice < 1 || choice > list.size()) {
+		std::cout << "Invalid selection.\n";
+		return;
+	}
+
+	std::cout << "Are you sure you want to delete this expense? (y/n): ";
+	char confirm;
+	std::cin >> confirm;
+	if (confirm == 'y' || confirm == 'Y') {
+		list.erase(list.begin() + (choice - 1));
+		std::cout << "Expense deleted.\n";
+	}
+	else {
+		std::cout << "Deletion cancelled.\n";
+	}
+}
+
+
+
+
 //1. Add Expense
 //2. View Expenses
 //3. Exit
@@ -100,7 +183,9 @@ int main()
 		cout << "1. Add Expense" << endl;
 		cout << "2. View Expenses" << endl;
 		cout << "3. Total Expenses" << endl;
-		cout << "4.Exit" << endl;
+		cout << "4.Edit Expense" << endl;
+		cout << "5. Delete Expense" << endl;
+		cout << "6.Save and Exit" << endl;
 		
 		cin >> option;
 
@@ -162,7 +247,20 @@ int main()
 			cout << "The Toal Expense to pay is: " << total << endl;
 		}
 
-		else if(option == 4)
+
+		else if (option == 4)
+		{
+			editExpense(ExpenseList);
+			saveExpensesToFile(ExpenseList);
+		}
+
+		else if (option == 5)
+		{
+			deleteExpense(ExpenseList);
+			saveExpensesToFile(ExpenseList);
+		}
+
+		else if(option == 6)
 		{
 			cout << "Thanks for using this service, GoodBye!" << endl;
 			saveExpensesToFile(ExpenseList);

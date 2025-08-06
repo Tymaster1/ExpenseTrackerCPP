@@ -1,0 +1,22 @@
+# Ignore Visual Studio files
+.vs/
+*.exe
+*.obj
+*.pdb
+*.user
+*.suo
+*.vcxproj.user
+*.log
+*.tmp
+*.cache
+*.ipch
+*.aps
+*.ncb
+*.sdf
+*.opensdf
+*.tlog
+Debug/
+Release/
+x64/
+*.ilk
+*.idb
